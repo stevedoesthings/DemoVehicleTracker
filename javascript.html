@@ -1,0 +1,261 @@
+<script>
+var map;
+
+function initMap(latlong) {
+  if (typeof latlong !== 'undefined'){
+    var demoEngineOnOff = {lat: Number(latlong.latitude.value), lng: Number(latlong.longitude.value)};
+  } else {
+    var demoEngineOnOff = {lat: 29.59632, lng: -98.56217};
+  }
+  
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: demoEngineOnOff,
+    zoom: 15
+  });
+}
+
+function searchLocationsOneByOne(location) {
+
+  if( location == "end of page" ) {
+    document.getElementById('buttonBox').innerHTML = "FIN";
+  }
+  
+  if( typeof location !== "undefined") {
+    var latLongStr = location.toString();
+    var latLongArr = latLongStr.split(",");
+    var location = new google.maps.LatLng(Number(latLongArr[0]),Number(latLongArr[1]));
+    var service = new google.maps.places.PlacesService(document.getElementById('map'));  
+    
+    service.nearbySearch({
+      location: location,
+      radius: 100,
+    //}, callback);
+    }, callback);
+  }
+}
+
+function callback(results, status) {
+
+  var resultsLen = results.length;
+  console.log("resultsLen: "+resultsLen);
+  var i = 0;
+  
+  for ( i; i <= resultsLen; i++ ) {
+  
+    console.log("results[i].name: " + results[i].name);
+    var resultName = results[i].name;
+    
+    if ( resultName == 'San Antonio' || resultName == 'Northeast Side' || resultName == 'North Central' || resultName == 'Northwest Side' || resultName == 'Far West Side' || resultName == 'Inner West Side' ) { continue; }
+    
+    switch(resultName) {
+    case "Lynk Direct/Fikes Wholesale, Inc.":
+      resultName = "Manheim";
+      break;
+    case "Sage Medicine":
+      resultName = "Accounting Office";
+      break;
+    case "IHOP":
+      resultName = "Sierra Motors";
+      break;
+    case "Crosspoint Inc":
+      resultName = "River City Federal Credit Union";
+      break;
+    case "Stone Werks Big Rock Grille @ The Vineyard":
+      resultName = "Chick-fil-A";
+      break;
+    case "Broadway Bank - Customer Service Center":
+      resultName = "Broadway Bank";
+      break;
+    case "Cake Art":
+      resultName = "SACU | Main Branch and Headquarters";
+      break;
+    case "Days Inn San Antonio Northwest/Seaworld":
+      resultName = "Generations Federal Credit Union";
+      break;
+    case "Joe's Crab Shack":
+      resultName = "RBFCU";
+      break;
+    case "The Blue Hutch":
+      resultName = "H-E-B";
+      break;
+    case "O Brien Historic Riverwalk, an Ascend Hotel Collection Member":
+      resultName = "Mexican Consulate";
+      break;
+    case "Hampton Inn San Antonio-Northwoods":
+      resultName = "Firstmark Credit Union - Gold Canyon Branch";
+      break;
+    case "Studio Hair Color Salon":
+      resultName = "Whataburger";
+      break;
+    case "A & E Factory Services":
+      resultName = "Air Force Federal Credit Union";
+      break;
+    case "Cude Engineers":
+    case "Anderson Johns & Yao CPAs PC":
+      resultName = "Accounting Office";
+      break;
+    case "Travelodge Inn & Suites San Antonio Airport":
+      resultName = "PFS Auto Finance";
+      break;
+    case "Stitches From the Heart":
+    case "Stamp Antonio":
+      resultName = "Tacos N Salsa";
+      break;
+    case "Quick Fix Auto Glass (210) 257-9971":
+      resultName = "Lone Star Used Cars";
+      break;
+    case "John David Bodker II - Aflac Insurance Agent":
+      resultName = "Pronto Cash";
+      break;
+    case "Tuesday Morning":
+      resultName = "TitleMax Title Loans";
+      break;
+    case "Alamo Obstetrics & Gynecology: Kapasi Mohsin MD":
+      resultName = "J.D. Byrider";
+      break;
+    case "Bourbon Street Seafood Kitchen":
+      resultName = "Shipley Do-Nuts";
+      break;
+    case "VCA Castle Hills Companion Animal Hospital":
+      resultName = "Bill Miller Bar-B-Q";
+      break;
+    case "COCO Chocolate Lounge & Bistro":
+      resultName = "SACU";
+      break;
+    case "Days Inn San Antonio Southeast By AT&T Center":
+      resultName = "A Affordable Autos";
+      break;
+    case "Grady's Bar-B-Que":
+      resultName = "Texas Car Title & Payday Loan Services Inc";
+      break;
+    case "Gonzaba Medical Group":
+      resultName = "Caliber Collision";
+      break;
+    case "Smartstyle Family Hair Salon":
+      resultName = "Wallmart";
+      break;
+    case "Sharkey's Cuts For Kids":
+      resultName = "SACU | Main Branch and Headquarters";
+      break;
+    case "Salado Creek Villas":
+      resultName = "PFS Auto Finance";
+      break;
+    case "San Antonio Kidney Disease Center: Wortham William MD":
+      resultName = "PFS Auto Finance";
+      break;
+    case "Tasco Air Conditioning":
+      resultName = "Red McCombs Collision Center";
+      break;
+    case "Enterprise Rent-A-Car":
+      resultName = "Red McCombs Collision Center";
+      break;
+    case "Precision Sport & Spine":
+      resultName = "Bill Miller Bar-B-Q";
+      break;
+    case "Comfort Suites Near Seaworld":
+      resultName = "IPAC Auto";
+      break;
+    case "Texas Pediatric Specialists and Family Sleep Center/ Texas Medical and Sleep Specialist":
+      resultName = "Accounting Office";
+      break;
+    case "Kelly J Smith MD":
+      resultName = "Accounting Office";
+      break;
+    case "Palacio Del Sol Housing":
+      resultName = "Bexar County Tax Assessor-Collector";
+      break;
+    case "Dr. Tarak J. Patel, MD":
+      resultName = "Accounting Office";
+      break;
+    default:
+      resultName = results[i].name;
+    }
+
+    if (status === google.maps.places.PlacesServiceStatus.OK) {
+      google.script.run.withSuccessHandler(colorSwap('green')).updateSheet(resultName);
+      //google.script.run.updateSheet(resultName);
+    }
+    break;
+  }
+  return;
+}
+
+function colorSwap(color) {
+  switch(color) {
+  case "red":
+    document.getElementById('bigButton').style.backgroundColor = 'red';
+    document.getElementById('bigButton').value = 'WAIT';
+    break;
+  case "green":
+    document.getElementById('bigButton').style.backgroundColor = 'green';
+    document.getElementById('bigButton').value = 'Next';
+    break;
+  default:
+    document.getElementById('bigButton').style.backgroundColor = 'green';
+  }
+}
+
+function consoleUpdate(message) {
+  console.log(message);  
+  //console.log(JSON.stringify(message));
+  //console.log("taco test consoleUpdate");
+}
+
+
+
+//pulls comparison list from configuration page rather than the below switch statement in callback
+/*function callback1(results, status) {
+  var resultsLen = results.length;
+  var switchListA = window.SwitchListA;
+  var switchListALen = switchListA.length;
+  var switchListB = window.SwitchListB;
+  var switchListBLen = switchListB.length;
+  var resultName, finName;
+  var i = 1, j = 1, count = 0;
+  //console.log('switchListALen: '+switchListALen);
+  //console.log('switchListBLen: '+switchListBLen);
+  //console.log( switchListA[j][0] );
+  
+  if (status === google.maps.places.PlacesServiceStatus.OK) {
+    for( i; i <= resultsLen; i++ ) {
+      if( typeof results[i].name !== "undefined" ) {
+      
+        resultName = results[i].name;
+        //console.log('resultName: '+resultName);
+        
+        for( j; j <= switchListALen; j++ ) {
+        
+          if( switchListA[j] == null ) { break; }
+          var switchListAj = switchListA[j][0].toString();
+          //console.log('resultName: '+resultName);
+          //console.log('switchListAj: '+switchListAj);
+
+          if( resultName == switchListAj ) {
+          
+              //if( switchListB[j] == null ) { break; }
+              finName = switchListB[j][0].toString();
+              //console.log('finName: '+finName);
+              count = 0;
+              google.script.run.withSuccessHandler(colorSwap('green')).updateSheet(finName);
+              break;
+              
+          } else {
+              count++;
+              continue;
+              //google.script.run.withSuccessHandler(colorSwap('green')).updateSheet(resultName);
+              //break;
+          }
+        }
+        //console.log('switchListALen: '+switchListALen);
+        //console.log('count: '+count);
+        count = count + 2;
+        if( count > switchListALen ) {
+          google.script.run.withSuccessHandler(colorSwap('green')).updateSheet(resultName);
+          break;
+        } else { continue; }
+      }
+    }
+  }
+}*/
+
+</script>

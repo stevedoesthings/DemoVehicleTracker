@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+    <?!= HtmlService.createHtmlOutputFromFile('javascript').getContent(); ?>
+    <?!= HtmlService.createHtmlOutputFromFile('css').getContent(); ?>
+<html>
+  <head>
+  </head>
+  <body>
+    <div id="buttonBox">
+      <input  id="bigButton" type="button" value="Next" onclick="colorSwap('red'); google.script.run.withSuccessHandler(searchLocationsOneByOne).lookUpLatLongFromSheetOneByOne();">
+    </div>
+    <div id="map"></div>
+    <div id="temp"></div>
+  </body>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDTwkAmVFKpY0rdK2Hkq5phRGc3P4YbsGM&libraries=places&callback=initMap" async defer></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+</html>
